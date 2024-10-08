@@ -10,6 +10,9 @@ import SwiftUI
 struct NotificationView: View {
     @StateObject var vm: NotificationViewModel
 
+    @Environment(\.colorScheme)
+    var systemColorScheme
+
     var notificationSize: CGSize {
         switch vm.status {
         case .closed:
@@ -21,14 +24,19 @@ struct NotificationView: View {
 
     var body: some View {
         ZStack(alignment: .top) {
-            notification
-                .zIndex(0)
-                .disabled(true)
             Group {
                 if vm.status == .opened {
                     vm.bodyView
                         .frame(maxWidth: vm.notificationOpenedSize.width, maxHeight: vm.notificationOpenedSize.height)
                         .zIndex(1)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16).stroke(lineWidth: 2).foregroundStyle(
+                                systemColorScheme == .dark ? Color.primary.opacity(0.2) : .white.opacity(0.3))
+                        )
+                        .background(.regularMaterial)
+                        .focusable(false)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .shadow(color: .black.opacity(0.5), radius: 10, y: 4)
                 }
             }
             .transition(
@@ -42,23 +50,5 @@ struct NotificationView: View {
         .padding()
         .animation(vm.animation, value: vm.status)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-    }
-
-    var notification: some View {
-        RoundedRectangle(cornerRadius: vm.cornerRadius)
-            .stroke(.primary.opacity(0.1), lineWidth: 1)
-            .background {
-                RoundedRectangle(cornerRadius: vm.cornerRadius)
-                    .fill(.thinMaterial)
-            }
-            .frame(
-                width: notificationSize.width,
-                height: notificationSize.height
-            )
-            .shadow(
-                color: .black.opacity(([.opened].contains(vm.status)) ? 0.4 : 0),
-                radius: 10,
-                y: 5
-            )
     }
 }
