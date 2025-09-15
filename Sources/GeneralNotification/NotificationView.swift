@@ -36,7 +36,7 @@ struct NotificationView: View {
                         .background(.regularMaterial)
                         .focusable(false)
                         .clipShape(RoundedRectangle(cornerRadius: 16))
-                        .shadow(color: .black.opacity(0.5), radius: 10, y: 4)
+                        .shadow(color: .black.opacity(0.2), radius: 4, y: 1)
                 }
             }
             .transition(
