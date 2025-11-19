@@ -10,10 +10,13 @@ class NotificationViewModel: NSObject, ObservableObject {
 
     let cornerRadius: CGFloat
 
+    let onTap: (() -> Void)?
+
     var referencedWindow: NotificationWindowController? = nil
 
-    init(screen: NSScreen, bodyView: AnyView) {
+    init(screen: NSScreen, bodyView: AnyView, onTap: (() -> Void)? = nil) {
         self.bodyView = AnyView(bodyView.padding(8))
+        self.onTap = onTap
 
         let bodyFittingSize = NSHostingView(rootView: self.bodyView).fittingSize
 
@@ -27,10 +30,11 @@ class NotificationViewModel: NSObject, ObservableObject {
         super.init()
     }
 
-    convenience init(screen: NSScreen, bodyView: some View) {
+    convenience init(screen: NSScreen, bodyView: some View, onTap: (() -> Void)? = nil) {
         self.init(
             screen: screen,
-            bodyView: AnyView(bodyView)
+            bodyView: AnyView(bodyView),
+            onTap: onTap
         )
     }
 

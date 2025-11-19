@@ -12,13 +12,15 @@ import SwiftUI
 struct NotificationContext {
     let screen: NSScreen
     let bodyView: AnyView
+    let onTap: (() -> Void)?
 
-    init(screen: NSScreen, bodyView: AnyView) {
+    init(screen: NSScreen, bodyView: AnyView, onTap: (() -> Void)? = nil) {
         self.screen = screen
         self.bodyView = bodyView
+        self.onTap = onTap
     }
 
-    init?(bodyView: AnyView) {
+    init?(bodyView: AnyView, onTap: (() -> Void)? = nil) {
         let mouseLocation = NSEvent.mouseLocation
         let screens = NSScreen.screens
         let screenWithMouse =
@@ -29,12 +31,13 @@ struct NotificationContext {
         }
         self.init(
             screen: screen,
-            bodyView: bodyView
+            bodyView: bodyView,
+            onTap: onTap
         )
     }
 
-    init?(bodyView: some View) {
-        self.init(bodyView: AnyView(bodyView))
+    init?(bodyView: some View, onTap: (() -> Void)? = nil) {
+        self.init(bodyView: AnyView(bodyView), onTap: onTap)
     }
 
     func open(forInterval interval: TimeInterval = 0) {
@@ -43,7 +46,8 @@ struct NotificationContext {
 
         let viewModel = NotificationViewModel(
             screen: screen,
-            bodyView: bodyView
+            bodyView: bodyView,
+            onTap: onTap
         )
         let view = NotificationView(vm: viewModel)
         let viewController = NotificationViewController(view)
@@ -55,12 +59,12 @@ struct NotificationContext {
             x: screen.frame.origin.x,
             y: screen.frame.origin.y + screen.frame.height - viewModel.notificationOpenedSize.height - shadowInset - 24,
             width: screen.frame.width,
-            height: viewModel.notificationOpenedSize.height + shadowInset // for shadow
+            height: viewModel.notificationOpenedSize.height + shadowInset  // for shadow
         )
         window.window?.setFrameOrigin(topRect.origin)
         window.window?.setContentSize(topRect.size)
 
-//        window.showWindow(nil)
+        //        window.showWindow(nil)
         window.window?.orderFront(nil)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
