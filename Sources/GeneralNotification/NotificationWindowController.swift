@@ -13,7 +13,7 @@ class NotificationWindowController: NSWindowController {
     init(screen: NSScreen) {
         let window = NotificationWindow(
             contentRect: screen.frame,
-            styleMask: [.borderless, .fullSizeContentView],
+            styleMask: [.borderless, .fullSizeContentView, .nonactivatingPanel],
             backing: .buffered,
             defer: false,
             screen: screen

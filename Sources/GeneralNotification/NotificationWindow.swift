@@ -7,7 +7,7 @@
 
 import Cocoa
 
-class NotificationWindow: NSWindow {
+class NotificationWindow: NSPanel {
     override init(
         contentRect: NSRect,
         styleMask: NSWindow.StyleMask,
@@ -35,6 +35,11 @@ class NotificationWindow: NSWindow {
         ]
         level = .statusBar + 8 // kills ibar lol
         hasShadow = false
+        hidesOnDeactivate = false
+    }
+
+    override func constrainFrameRect(_ frameRect: NSRect, to screen: NSScreen?) -> NSRect {
+        return frameRect
     }
 
     override var canBecomeKey: Bool {
